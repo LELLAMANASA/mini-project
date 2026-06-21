@@ -155,7 +155,7 @@ Formatting Rules:
 
     // Execute generateContent using gemini-3.5-flash for balanced multimodal speed and accuracy
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+     model: "gemini-2.5-flash",
       contents: contents,
       config: {
         systemInstruction: systemInstruction,
