@@ -1,0 +1,6 @@
+{
+  "name": "Student Productivity Assistant",
+  "description": "An ultra-modern, aesthetic Student Productivity & To-Do Suite featuring an Advanced Task Manager, a circular Pomodoro Timer, interactive attendance tracking, interactive monthly calendar, progress dashboards, and smart simulated AI help.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
