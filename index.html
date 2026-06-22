@@ -469,7 +469,7 @@
       </div>
 
       <!-- Cloud Auth Sync Status Widget -->
-      <div id="cloud-sync-widget" class="mb-3 px-2 py-1.5 rounded-xl border border-dashed border-slate-200/55 dark:border-slate-850/60 bg-slate-500/5 dark:bg-slate-900/30 flex items-center justify-between select-none transition">
+      <div id="cloud-sync-widget" class="hidden">
          <!-- Placed dynamically inside client script -->
       </div>
 
@@ -1390,7 +1390,7 @@
               <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-widest bg-indigo-500/10 text-indigo-500">
                 ACTIVE SEMESTER PORTAL
               </span>
-              <h2 class="text-2xl md:text-3xl font-black font-display text-slate-800 dark:text-white leading-tight">Welcome, Avishkar Reviewer</h2>
+              <h2 class="text-2xl md:text-3xl font-black font-display text-slate-800 dark:text-white leading-tight">Welcome, Smart To-Do List</h2>
               <p class="text-xs text-slate-500 dark:text-slate-400 max-w-lg">Sleek Interface integrates all crucial indicators of student performance. Access tasks, schedules, timer, and attendance registrars effortlessly offline.</p>
             </div>
             
@@ -3172,34 +3172,50 @@
     // UNIQUE SECURE CLOUD AUTHENTICATION & SYNC SUITE
     // ==========================================
     function renderCloudSyncWidget() {
+      // Keep sidebar one clean & empty since it's "in profile only"
       const widget = document.getElementById("cloud-sync-widget");
-      if (!widget) return;
+      if (widget) {
+        widget.innerHTML = "";
+      }
+
+      const profileWidget = document.getElementById("profile-cloud-sync-widget");
+      if (!profileWidget) return;
 
       if (!cloudUser) {
-        widget.innerHTML = `
-          <div class="flex items-center gap-2 w-full justify-between">
-            <div class="flex items-center gap-1.5 min-w-0">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-pulse"></span>
-              <p class="text-[9px] font-bold text-slate-500 truncate select-none uppercase tracking-wider font-mono">Offline Mode</p>
+        profileWidget.innerHTML = `
+          <div class="flex items-center gap-3 w-full justify-between py-1 animate-fade-in text-slate-800 dark:text-zinc-200">
+            <div class="flex items-center gap-2 min-w-0">
+              <div class="w-7 h-7 rounded-lg bg-slate-500/10 flex items-center justify-center text-slate-450">
+                <i class="fa-solid fa-cloud-slash text-xs"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-[10px] font-bold truncate select-none uppercase tracking-wider font-mono">Offline Backup Mode</p>
+                <p class="text-[8px] text-slate-400 dark:text-slate-500 font-medium leading-none select-none text-left">Data is only saved locally in cache.</p>
+              </div>
             </div>
-            <button onclick="revealAuthModal()" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-[9px] font-black uppercase text-white rounded-lg transition-all cursor-pointer">
-              Sync Account
+            <button type="button" onclick="revealAuthModal()" class="px-3 py-1.5 bg-indigo-650 hover:bg-indigo-600 text-[10px] font-black uppercase text-white rounded-lg transition-all cursor-pointer shadow-sm hover:scale-101 active:scale-98">
+              Link Cloud Sync
             </button>
           </div>
         `;
       } else {
-        widget.innerHTML = `
-          <div class="flex items-center gap-1.5 w-full">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
-            <div class="min-w-0 flex-1">
-              <p class="text-[9px] font-bold text-slate-700 dark:text-slate-200 leading-none truncate select-none uppercase font-mono">${cloudUser}</p>
-              <p class="text-[8px] font-extrabold text-emerald-500 font-mono tracking-wider uppercase leading-none mt-0.5 select-none text-left">Cloud Active</p>
+        profileWidget.innerHTML = `
+          <div class="flex items-center gap-3 w-full justify-between py-1 animate-fade-in text-slate-800 dark:text-zinc-200">
+            <div class="flex items-center gap-2 min-w-0">
+              <div class="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-[10px] font-black text-slate-750 dark:text-slate-200 tracking-wide truncate select-none uppercase font-mono">${cloudUser}</p>
+                <p class="text-[8px] font-extrabold text-emerald-500 font-mono tracking-wider uppercase leading-none mt-1 select-none text-left">Active Session Authenticated</p>
+              </div>
             </div>
-            <div class="flex gap-1.5 shrink-0 align-middle">
-              <button onclick="triggerSynchronize()" class="p-1.5 hover:bg-indigo-500/10 rounded-lg text-indigo-500/90 dark:text-indigo-400 active:scale-95 transition cursor-pointer flex items-center justify-center border border-indigo-500/15" title="Push changes now">
-                <i class="fa-solid fa-cloud-arrow-up text-[9px]"></i>
+            <div class="flex gap-2">
+              <button type="button" onclick="triggerSynchronize()" class="px-2.5 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 border border-indigo-500/15" title="Synchronize pending changes">
+                <i class="fa-solid fa-rotate text-[8px]"></i>
+                <span>Sync Now</span>
               </button>
-              <button onclick="handleCloudLogout()" class="p-1.5 hover:bg-rose-500/10 rounded-lg text-rose-500 hover:text-rose-600 active:scale-95 transition cursor-pointer flex items-center justify-center border border-rose-500/15" title="Logout session">
+              <button type="button" onclick="handleCloudLogout()" class="px-2.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/15 text-rose-500 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center border border-rose-500/15" title="Logout session">
                 <i class="fa-solid fa-power-off text-[9px]"></i>
               </button>
             </div>
@@ -3451,7 +3467,7 @@
         verifyTargetUser = username;
         generatedPin = Math.floor(100000 + Math.random() * 900000).toString();
 
-        const toastMsg = "InstaSync generated code [" + generatedPin + "] for account recovery!";
+        const toastMsg = "Smart To-Do Cloud Sync generated code [" + generatedPin + "] for account recovery!";
         showGlobalToast(toastMsg, "success");
         playAppSuccess();
 
@@ -5924,95 +5940,9 @@ ${activeN.actionItems.map(a => `- [ ] ${a}`).join("\n") || "No unresolved action
                   </div>
                 ` : ""}
 
-                <!-- Rotary Spin-Typer S-Pen Word Wheel widget -->
-                <div class="border-t border-slate-200/50 pt-5 mt-5">
-                  <div class="flex items-center justify-between mb-3">
-                    <h5 class="text-xs font-black text-slate-850 dark:text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
-                      <i class="fa-solid fa-compass text-amber-500 animate-spin-slow"></i> Rotary Spin-Typer S-Pen Wheel
-                    </h5>
-                    <span class="text-[9px] text-slate-400 font-medium font-sans">Draft concepts onto caret cursor positions</span>
-                  </div>
 
-                  <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center bg-slate-50/50 dark:bg-slate-900/35 p-4 rounded-2xl border border-slate-200/45 dark:border-slate-800/80">
-                    <!-- Spinning Wheel Graphics (left) -->
-                    <div class="col-span-1 md:col-span-4 flex flex-col items-center justify-center relative select-none">
-                      <!-- Pointer arrow -->
-                      <div class="absolute -top-1.5 z-10 text-rose-500 text-sm drop-shadow-sm animate-bounce"><i class="fa-solid fa-caret-down"></i></div>
-                      
-                      <!-- Wheel disc container -->
-                      <div id="radial-wheel-spinner-container" class="w-28 h-28 rounded-full border-4 border-amber-550 bg-slate-900 border-amber-500/80 shadow-md relative transition-transform duration-500 flex items-center justify-center overflow-hidden">
-                        <!-- Crosshair guides inside -->
-                        <div class="absolute inset-0 border-t border-b border-dashed border-slate-700/20"></div>
-                        <div class="absolute inset-0 border-l border-r border-dashed border-slate-700/20"></div>
-                        <!-- Center Core cap button -->
-                        <button onclick="spinWheelSelect()" class="absolute w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white font-extrabold text-[9px] flex items-center justify-center border-2 border-white cursor-pointer hover:scale-105 z-20 shadow-md transition-transform" id="core-spinner-btn">SPIN</button>
-                        
-                        <!-- Sectors text items radiating outwards inside -->
-                        <div class="absolute w-full h-full text-[8px] font-black uppercase text-slate-400 font-mono">
-                          <span class="absolute top-1 left-1/2 -translate-x-1/2 rotate-0 origin-center text-amber-400 text-[7px]" style="transform: rotate(0deg) translateY(-20px);">Done</span>
-                          <span class="absolute top-1 left-1/2 -translate-x-1/2 text-slate-350 text-[7px]" style="transform: rotate(45deg) translateY(-20px); transform-origin: 0 56px;">Alert</span>
-                          <span class="absolute top-1 left-1/2 -translate-x-1/2 text-slate-350 text-[7px]" style="transform: rotate(90deg) translateY(-20px); transform-origin: 0 56px;">Invest</span>
-                          <span class="absolute top-1 left-1/2 -translate-x-1/2 text-slate-350 text-[7px]" style="transform: rotate(135deg) translateY(-20px); transform-origin: 0 56px;">Idea</span>
-                          <span class="absolute top-1 left-1/2 -translate-x-1/2 text-slate-350 text-[7px]" style="transform: rotate(180deg) translateY(-20px); transform-origin: 0 56px;">Urgent</span>
-                          <span class="absolute top-1 left-1/2 -translate-x-1/2 text-slate-350 text-[7px]" style="transform: rotate(225deg) translateY(-20px); transform-origin: 0 56px;">Study</span>
-                          <span class="absolute top-1 left-1/2 -translate-x-1/2 text-slate-350 text-[7px]" style="transform: rotate(270deg) translateY(-20px); transform-origin: 0 56px;">B.Tech</span>
-                          <span class="absolute top-1 left-1/2 -translate-x-1/2 text-slate-350 text-[7px]" style="transform: rotate(315deg) translateY(-20px); transform-origin: 0 56px;">Memo</span>
-                        </div>
-                      </div>
-                    </div>
 
-                    <!-- Direct selection word chips list (right) -->
-                    <div class="col-span-1 md:col-span-8 space-y-2">
-                      <p class="text-[10px] text-slate-450 dark:text-slate-500 leading-snug font-medium font-sans">Click any vocabulary capsule below to pivot the wheel and automatically print it centered at your cursor:</p>
-                      <div class="flex flex-wrap gap-1.5">
-                        ${[
-                          { term: "Done ✅", col: "hover:border-emerald-500 hover:text-emerald-600 bg-emerald-50/20" },
-                          { term: "Prioritize ⚠️", col: "hover:border-red-500 hover:text-red-600 bg-red-50/20" },
-                          { term: "Research 👀", col: "hover:border-blue-500 hover:text-blue-600 bg-blue-50/20" },
-                          { term: "Genius Idea 💡", col: "hover:border-amber-500 hover:text-amber-600 bg-amber-50/20" },
-                          { term: "Urgent Hot 🔥", col: "hover:border-orange-500 hover:text-orange-600 bg-orange-50/20" },
-                          { term: "Academic Study 📝", col: "hover:border-slate-500 hover:text-slate-600 bg-slate-50/20" },
-                          { term: "B.Tech Topic 🎓", col: "hover:border-indigo-500 hover:text-indigo-600 bg-indigo-50/20" },
-                          { term: "General Memo 🎯", col: "hover:border-pink-500 hover:text-pink-600 bg-pink-50/20" }
-                        ].map((item, id) => `
-                          <button onclick="triggerWheelTyping('${item.term}')" class="px-2.5 py-1 text-[10px] font-mono font-bold border border-slate-200 dark:border-slate-800 rounded-lg cursor-pointer transition-all duration-150 text-slate-600 dark:text-slate-300 hover:scale-[1.03] ${item.col}">
-                            ${item.term}
-                          </button>
-                        `).join("")}
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                <!-- Dynamic Checklist Bullet Section -->
-                <div class="border-t border-slate-200/50 pt-4 mt-4">
-                  <h5 class="text-xs font-black text-slate-850 dark:text-white uppercase tracking-wider font-mono mb-2 flex items-center gap-1.5">
-                    <i class="fa-solid fa-check-double text-amber-500"></i> Interactive Study Checklist
-                  </h5>
-                  
-                  <!-- Quick Add Inline checklist Input -->
-                  <div class="flex gap-2 max-w-md mb-3">
-                    <input type="text" id="checklist-item-input-elem" placeholder="What task needs to format?" class="flex-1 text-xs px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-amber-500">
-                    <button onclick="triggerAssembleChecklistItem()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer">+ Bullet</button>
-                  </div>
-
-                  <!-- List of current items -->
-                  <div class="space-y-1.5">
-                    ${!activeN.checklistItems || activeN.checklistItems.length === 0 ? `
-                      <p class="text-[11px] text-slate-400 italic font-sans">No checklist elements. Add some above!</p>
-                    ` : activeN.checklistItems.map(item => {
-                      return `
-                        <div class="flex items-center justify-between max-w-xl bg-slate-50 hover:bg-slate-100/30 dark:bg-slate-900/40 px-3 py-1.5 rounded-lg border border-slate-100/50 dark:border-slate-800">
-                          <div class="flex items-center gap-2.5">
-                            <input type="checkbox" onchange="toggleNoteChecklistItem('${item.id}')" ${item.done ? "checked" : ""} class="rounded border-slate-350 text-amber-500 focus:ring-amber-400 cursor-pointer">
-                            <span class="text-xs font-medium text-slate-705 dark:text-slate-200 ${item.done ? "line-through text-slate-400 dark:text-slate-505" : ""} font-sans">${item.text}</span>
-                          </div>
-                          <button onclick="deleteNoteChecklistItem('${item.id}')" class="text-slate-405 hover:text-red-500 font-mono text-[10px] p-0.5">✕</button>
-                        </div>
-                      `;
-                    }).join("")}
-                  </div>
-                </div>
               </div>
 
               <!-- Bottom Status indicator row -->
@@ -8875,14 +8805,35 @@ ${activeN.actionItems.map(a => `- [ ] ${a}`).join("\n") || "No unresolved action
         <!-- ================= PANEL 1: LOGIN ================= -->
         <div id="panel-insta-login" class="auth-panel-visible space-y-5">
           <!-- Logo Header -->
-          <div class="text-center pt-2 select-none">
-            <div class="inline-flex items-center justify-center w-14 h-14 rounded-[22px] bg-gradient-to-tr from-yellow-400 via-pink-500 via-rose-500 to-purple-600 p-[2.5px] mb-2.5 shadow-md">
-              <div class="w-full h-full bg-white dark:bg-[#0b0b0b] rounded-[20px] flex items-center justify-center">
-                <i class="fa-brands fa-instagram text-2xl bg-gradient-to-tr from-yellow-500 via-rose-500 to-purple-600 bg-clip-text text-transparent animate-pulse"></i>
+          <div class="flex items-center justify-center gap-3 py-2 select-none">
+            <!-- Interactive SVG Icon with precise paths matching checkmark & brain -->
+            <svg class="w-14 h-14 shrink-0" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logo-gradient" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#14b8a6"/>
+                  <stop offset="50%" stop-color="#06b6d4"/>
+                  <stop offset="100%" stop-color="#3b82f6"/>
+                </linearGradient>
+              </defs>
+              <!-- Outer partially open circle -->
+              <path d="M 125,160 A 70,70 0 1,1 155,75" stroke="url(#logo-gradient)" stroke-width="12" stroke-linecap="round" fill="none"/>
+              <!-- Brain Silhouette Patterns -->
+              <path d="M 60,105 C 50,100 45,85 55,75 C 50,65 58,52 68,55 C 72,43 88,43 93,52 C 100,45 112,50 115,60 C 122,63 125,75 120,82 C 125,92 118,102 112,100" stroke="url(#logo-gradient)" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.8"/>
+              <path d="M 75,70 C 80,65 90,65 95,72" stroke="url(#logo-gradient)" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>
+              <path d="M 68,85 C 75,80 85,82 88,90" stroke="url(#logo-gradient)" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>
+              <path d="M 80,100 C 85,95 95,98 98,105" stroke="url(#logo-gradient)" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>
+              <!-- Bold Checkmark sweeping out of the brain -->
+              <path d="M 70,110 L 100,140 L 175,55" stroke="url(#logo-gradient)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <!-- Text Header -->
+            <div class="text-left flex flex-col justify-center">
+              <div class="text-2xl font-black tracking-wider text-slate-800 dark:text-zinc-200 uppercase leading-none font-sans" style="font-family: 'Space Grotesk', sans-serif;">
+                Smart
+              </div>
+              <div class="text-[10px] font-bold tracking-[0.2em] text-slate-500 dark:text-slate-400 uppercase leading-none mt-1" style="font-family: 'JetBrains Mono', sans-serif;">
+                To-Do List
               </div>
             </div>
-            <h2 class="text-2xl font-black tracking-tight font-display bg-gradient-to-tr from-yellow-500 via-rose-500 to-purple-600 bg-clip-text text-transparent italic leading-none">InstaSync</h2>
-            <p class="text-[10px] text-neutral-400 dark:text-neutral-500 font-bold uppercase tracking-widest mt-1">Multi-Device Cloud Engine</p>
           </div>
 
           <form onsubmit="handleInstaLogin(event)" class="space-y-3.5">
@@ -8934,12 +8885,39 @@ ${activeN.actionItems.map(a => `- [ ] ${a}`).join("\n") || "No unresolved action
         <!-- ================= PANEL 2: SIGN UP ================= -->
         <div id="panel-insta-signup" class="auth-panel-hidden space-y-5">
           <!-- Logo Header -->
-          <div class="text-center pt-2 select-none">
-            <h2 class="text-2xl font-black tracking-tight font-display bg-gradient-to-tr from-yellow-500 via-rose-500 to-purple-600 bg-clip-text text-transparent italic leading-none">InstaSync</h2>
-            <p class="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 leading-normal max-w-[250px] mx-auto mt-1.5">
-              Sign up to sync your notes, schedule, and goals across multi devices.
-            </p>
+          <div class="flex items-center justify-center gap-3 py-2 select-none">
+            <!-- Interactive SVG Icon with precise paths matching checkmark & brain -->
+            <svg class="w-14 h-14 shrink-0" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logo-gradient-signup" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#14b8a6"/>
+                  <stop offset="50%" stop-color="#06b6d4"/>
+                  <stop offset="100%" stop-color="#3b82f6"/>
+                </linearGradient>
+              </defs>
+              <!-- Outer partially open circle -->
+              <path d="M 125,160 A 70,70 0 1,1 155,75" stroke="url(#logo-gradient-signup)" stroke-width="12" stroke-linecap="round" fill="none"/>
+              <!-- Brain Silhouette Patterns -->
+              <path d="M 60,105 C 50,100 45,85 55,75 C 50,65 58,52 68,55 C 72,43 88,43 93,52 C 100,45 112,50 115,60 C 122,63 125,75 120,82 C 125,92 118,102 112,100" stroke="url(#logo-gradient-signup)" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.8"/>
+              <path d="M 75,70 C 80,65 90,65 95,72" stroke="url(#logo-gradient-signup)" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>
+              <path d="M 68,85 C 75,80 85,82 88,90" stroke="url(#logo-gradient-signup)" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>
+              <path d="M 80,100 C 85,95 95,98 98,105" stroke="url(#logo-gradient-signup)" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>
+              <!-- Bold Checkmark sweeping out of the brain -->
+              <path d="M 70,110 L 100,140 L 175,55" stroke="url(#logo-gradient-signup)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <!-- Text Header -->
+            <div class="text-left flex flex-col justify-center">
+              <div class="text-2xl font-black tracking-wider text-slate-800 dark:text-zinc-200 uppercase leading-none font-sans" style="font-family: 'Space Grotesk', sans-serif;">
+                Smart
+              </div>
+              <div class="text-[10px] font-bold tracking-[0.2em] text-slate-500 dark:text-slate-400 uppercase leading-none mt-1" style="font-family: 'JetBrains Mono', sans-serif;">
+                To-Do List
+              </div>
+            </div>
           </div>
+          <p class="text-[10.5px] font-medium text-neutral-500 dark:text-neutral-400 leading-normal max-w-[250px] mx-auto mt-0.5 text-center">
+            Sign up to sync your notes, schedule, active reminders, and goals across multi devices.
+          </p>
 
           <form onsubmit="handleInstaSignUp(event)" class="space-y-3.5">
             <div class="relative">
@@ -9221,6 +9199,17 @@ ${activeN.actionItems.map(a => `- [ ] ${a}`).join("\n") || "No unresolved action
         </div>
 
       </form>
+
+      <!-- Cloud Sync Account Settings Section inside Profile Modal ONLY -->
+      <div class="p-3 bg-indigo-500/5 dark:bg-indigo-500/[0.02] border border-indigo-500/10 dark:border-indigo-500/5 rounded-xl space-y-1.5 selection:bg-indigo-500/30 mt-4">
+        <label class="text-[9px] font-black text-indigo-500 dark:text-indigo-400 uppercase block font-mono flex items-center gap-1.5">
+          <i class="fa-solid fa-cloud"></i>
+          <span>Cloud Network Sync Engine</span>
+        </label>
+        <div id="profile-cloud-sync-widget" class="min-h-11">
+           <!-- Populated dynamically via JS -->
+        </div>
+      </div>
 
     </div>
   </div>
